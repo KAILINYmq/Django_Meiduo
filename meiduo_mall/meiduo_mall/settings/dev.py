@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/1.11/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.11/ref/settings/
 """
-
+import datetime
 import os
 import sys
 
@@ -196,7 +196,20 @@ STATIC_URL = '/static/'
 # REST配置
 REST_FRAMEWORK = {
     # 异常处理
-    'EXCEPTION_HANDLER': 'meiduo-mall.utils.exceptions.exception_handler',
+    'EXCEPTION_HANDLER': 'meiduo_mall.utils.exceptions.exception_handler',
+
+    # # 认证机制后端
+    # 'DEFAULT_AUTHENTICATION_CLASSES': {
+    #     'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+    #     'rest_framework.authentication.SessionAuthentication',
+    #     'rest_framework.authentication.BasicAuthentication',
+    # },
+}
+
+# 设置JWT有效期
+JWT_AUTH = {
+     'JWT_EXPIRATION_DELTA': datetime.timedelta(days=1),  # days:保存一天
+     'JWT_RESPONSE_PAYLOAD_HANDLER': 'users.utils.jwt_response_payload_handler',  # 修改jwt登录的响应数据
 }
 
 # Django认证系统使用的模型类

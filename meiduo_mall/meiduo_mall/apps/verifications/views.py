@@ -23,7 +23,6 @@ class ImageCodeView(APIView):
 
         return HttpResponse(image, content_type="images/jpg")
 
-
 class SMSCodeView(GenericAPIView):
     """短信验证码"""
     def get(self, request, mobile):
@@ -46,6 +45,10 @@ class SMSCodeView(GenericAPIView):
         # 使用celery完成异步任务发送短信
         send_sms_code.delay(mobile, sms_code)
 
-
         # 返回
         return Response({'message': 'OK'})
+
+
+#　TODO　校验用户名
+#　TODO　校验手机号
+

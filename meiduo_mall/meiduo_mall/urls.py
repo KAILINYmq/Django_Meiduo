@@ -23,4 +23,7 @@ urlpatterns = [
 
     # 发送短信验证码
     url(r'^', include('verifications.urls')),
+
+    # 用户登陆模块
+    url(r'^', include('users.urls')),
 ]

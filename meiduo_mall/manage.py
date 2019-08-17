@@ -5,6 +5,10 @@ import sys
 if __name__ == "__main__":
     # 修改启用时用dev配置文件
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "meiduo_mall.settings.dev")
+
+    # ＣＯＲＳ解决跨站请求问题
+    #from django.core.management import execute_from_command_line
+
     try:
         from django.core.management import execute_from_command_line
     except ImportError:

@@ -14,4 +14,4 @@ celery_app.autodiscover_tasks(['celery_tasks.sms'])
 # celery -A celery_tasks.main worker -l info
 # win10上运行celery4.x就会出现这个问题(ValueError: not enough values to unpack (expected 3, got 0))
 # 需要安装pip install eventlet后用以下命令执行
-# celery -A <mymodule> worker -l info -P eventlet
+# celery -A celery_tasks.main worker -l info -P eventlet
