@@ -8,16 +8,17 @@ class CreateUserSerializer(serializers.ModelSerializer):
     password2 = serializers.CharField(label='密码2', write_only=True)
     sms_code = serializers.CharField(label='验证码', write_only=True)
     allow = serializers.CharField(label='同意协议', write_only=True)
+    token = serializers.CharField(label='JWT token登录状态', read_only=True)
     """
     序列化器中需要的所有字段: 'id', 'username', 'mobile', 'password', 'password2', 'sms_code', 'allow'
     模型中已有字段: id', 'username', 'mobile', 'password'
-    需要进行序列化的字段: 'username', 'mobile', 'password', 'password2', 'sms_code', 'allow'
+    需要进行序列化的字段: 'token', 'username', 'mobile', 'password', 'password2', 'sms_code', 'allow'
     需要进行反序列化的字段:  'id', 'username', 'mobile'
     """
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'mobile', 'password', 'password2', 'sms_code', 'allow']
+        fields = ['id', 'username', 'mobile', 'password', 'password2', 'sms_code', 'allow', 'token']
         extra_kwargs = {  # 对序列化器中的字段进行额外配置
             'username': {
                 'min_length': 5,
@@ -80,4 +81,14 @@ class CreateUserSerializer(serializers.ModelSerializer):
         user.set_password(password)  # 对密码进行加密后再赋值给user模型对象的password属性
         user.save()
         # return User.objects.create(**validated_data)
+
+
+        # 手动生成JWT token
+        jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER  # 加载生成载荷函数
+        jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER  # 加载生成token的函数
+        payload = jwt_payload_handler(user)  # 通过传入user对象生成jwt 载荷部分
+        token = jwt_encode_handler(payload)  # 传入payload 生成token
+        # 给user 模型对象多增加一个token属性,再给序列化器多增加token字段只做序列化
+        user.token = token
+
         return user
