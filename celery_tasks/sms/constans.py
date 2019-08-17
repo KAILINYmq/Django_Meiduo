@@ -1,0 +1,1 @@
+SMS_CODE_REDIS_EXPIRES = 300   # 验证码有效期300秒SEND_SMS_CODE_INTERVAL = 60   # 同一手机号短信间隔时间60秒SMS_CODE_TEMPLATE_ID = 1  # 短信模板id
