@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from itsdangerous import TimedJSONWebSignatureSerializer as TJWSSerializer
+from itsdangerous import TimedJSONWebSignatureSerializer as TJWSSerializer, BadData
 from django.conf import settings
 
 from . import constants
@@ -26,4 +26,33 @@ class User(AbstractUser):
         }
         token = serialier.dumps(data)
         return token.decode()
+
+    @staticmethod
+    def check_send_sms_code_token(token):
+        """
+        找回密码时检验access token
+        :param token: access token
+        :return: mobile None
+        """
+        # 创建itsdangerous模型的转换工具
+        serialize = TJWSSerializer(settings.SECRET_KEY, constants.SEND_SMS_CODE_TOKEN_EXIPIRES)
+        try:
+            data = serialize.loads(token)
+        except BadData:
+            return None
+        else:
+            mobile = data.get('mobile')
+            return mobile
+
+
+
+
+
+
+
+
+
+
+
+
 
