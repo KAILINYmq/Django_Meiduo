@@ -3,6 +3,7 @@ import re
 from django_redis import get_redis_connection
 from rest_framework_jwt.settings import api_settings
 from . models import User
+from .utils import get_user_by_account
 
 
 class CreateUserSerializer(serializers.ModelSerializer):
@@ -50,28 +51,6 @@ class CreateUserSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         """重写序列化器的保存方法把多余数据移除(创建用户)"""
-        # del validated_data['password2']
-        # del validated_data['sms_code']
-        # del validated_data['allow']
-        #
-        # password = validated_data.pop('password')  # 把字典中的password移除
-        #
-        # user = User(**validated_data)
-        # user.set_password(password)  # 对密码进行加密后再赋值给user模型对象的password属性
-        # user.save()
-        # # return User.objects.create(**validated_data)
-        #
-        #
-        # # 手动生成JWT token
-        # jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER  # 加载生成载荷函数
-        # jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER  # 加载生成token的函数
-        # payload = jwt_payload_handler(user)  # 通过传入user对象生成jwt 载荷部分
-        # token = jwt_encode_handler(payload)  # 传入payload 生成token
-        # # 给user 模型对象多增加一个token属性,再给序列化器多增加token字段只做序列化
-        # user.token = token
-        # print("注册完成！")
-        # return user
-        print("createOK")
         del validated_data['password2']
         del validated_data['sms_code']
         del validated_data['allow']
@@ -107,10 +86,54 @@ class CreateUserSerializer(serializers.ModelSerializer):
             'password': {
                 'write_only': True,  # 只做反序列化
                 'min_length': 8,
-                'max_length': 20,
+                'max_length ': 20,
                 'error_messages': {
                     'min_length': '仅允许8-20个字符的密码',
                     'max_length': '仅允许8-20个字符的密码',
                 }
             }
         }
+
+
+class CheckSMSCodeSerializer(serializers.Serializer):
+    """
+    检查sms code
+    """
+    sms_code = serializers.CharField(min_length=6, max_length=6)
+    def validate_sms_code(self, value):
+        account = self.context['view'].kwargs['account']
+        # 获取user
+        user = get_user_by_account(account)
+        if user is None:
+                raise serializers.ValidationError('用户不存在')
+        # 把user对象保存到序列化器对象中
+        self.user = user
+        # 检验短信验证码
+        redis_conn = get_redis_connection('verify_codes')
+        real_sms_code = redis_conn.get('sms_%s' % user.mobile)
+        if real_sms_code is None:
+            raise serializers.ValidationError('无效的短信验证码')
+        if value != real_sms_code.decode():
+            raise serializers.ValidationError('短信验证码错误')
+        return value
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
