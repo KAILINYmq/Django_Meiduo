@@ -41,13 +41,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',  # DRF
-   # 'corsheaders',     # CORS
+    'corsheaders',     # CORS
     'users.apps.UsersConfig',
     'verifications.apps.VerificationsConfig',
 ]
 
 MIDDLEWARE = [
-    # 'corsheaders.middleware.CorsMiddleware',  # 解决跨域问题, 此中间必须 放在所有中间件的最外层
+    'corsheaders.middleware.CorsMiddleware',  # 解决跨域问题, 此中间必须 放在所有中间件的最外层
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -118,7 +118,7 @@ CACHES = {
 }
 
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
-SESSION_ENGINE_ALIAS = "session"
+SESSION_ENGINE_ALIAS = "session"    # 指定session缓存到redis
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
@@ -211,6 +211,12 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.BasicAuthentication',  # 基础认证
     ),
 }
+# 设置JWT有效期
+JWT_AUTH = {
+     'JWT_EXPIRATION_DELTA': datetime.timedelta(days=1),  # days:保存一天
+     'JWT_RESPONSE_PAYLOAD_HANDLER': 'users.utils.jwt_response_payload_handler',  # 修改jwt登录的响应数据
+}
+
 
 # Django认证系统使用的模型类
 AUTH_USER_MODEL = 'users.User'
@@ -221,18 +227,14 @@ AUTHENTICATION_BACKENDS = [
 
 # CORS  追加白名单
 CORS_ORIGIN_WHITELIST = (
-    '127.0.0.1:7999',
-    'localhost:7999',
-    'www.meiduo.site:7999',
-    'api.meiduo.site:8000'
+    'http://127.0.0.1:7999',
+    'http://127.0.0.1:8000',
+    'http://localhost:7999',
+    'http://localhost:8000',
+    'http://www.meiduo.site:7999',
+    'http://api.meiduo.site:8000'
 )
 
 CORS_ALLOW_CREDENTIALS = True  # 允许携带cookie
-
-# 设置JWT有效期
-JWT_AUTH = {
-     'JWT_EXPIRATION_DELTA': datetime.timedelta(days=1),  # days:保存一天
-     'JWT_RESPONSE_PAYLOAD_HANDLER': 'users.utils.jwt_response_payload_handler',  # 修改jwt登录的响应数据
-}
 
 

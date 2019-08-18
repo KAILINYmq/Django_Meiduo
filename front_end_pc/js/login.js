@@ -41,16 +41,16 @@ var vm = new Vue({
             this.check_pwd();
 
             if (this.error_username == false && this.error_pwd == false) {
+                    console.log(this.remember);
                 axios.post(this.host+'/authorizations/', {
                         username: this.username,
                         password: this.password
                     }, {
                         responseType: 'json',
-                        withCredentials: true   // 前端指定跨域时可以携带cookie
+                        withCredentials: true  // 跨域时允许携带cookie
                     })
                     .then(response => {
                         // 使用浏览器本地存储保存token
-                        // remember:表示注册界面中的记住登陆功能
                         if (this.remember) {
                             // 记住登录
                             sessionStorage.clear();
@@ -73,22 +73,22 @@ var vm = new Vue({
                         location.href = return_url;
                     })
                     .catch(error => {
-                        if (error.response.status == 400) {
+                        //if (error.response.status == 400) {
                             this.error_pwd_message = '用户名或密码错误';
-                        } else {
-                            this.error_pwd_message = '服务器错误';
-                        }
-                        this.error_pwd = true;
+                            this.error_pwd = true;
+                        // } else {
+                        //     this.error_pwd_message = '服务器错误';
+                        // }
+                            //this.error_pwd = true;
                     })
             }
         },
         // qq登录
-        qq_login: function () {
+        qq_login: function(){
             var next = this.get_query_string('next') || '/';
             axios.get(this.host + '/oauth/qq/authorization/?next=' + next, {
-                responseType: 'json',
-                withCredentials: true
-            })
+                    responseType: 'json'
+                })
                 .then(response => {
                     location.href = response.data.login_url;
                 })
@@ -96,6 +96,5 @@ var vm = new Vue({
                     console.log(error.response.data);
                 })
         }
-
     }
 });

@@ -44,6 +44,7 @@ class SMSCodeView(GenericAPIView):
         # ccp.send_template_sms(mobile, [sms_code, time], constants.SMS_CODE_TEMP_ID)
         # 使用celery完成异步任务发送短信
         send_sms_code.delay(mobile, sms_code)
+        print(sms_code)
 
         # 返回
         return Response({'message': 'OK'})

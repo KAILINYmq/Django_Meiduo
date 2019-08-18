@@ -7,7 +7,7 @@
 	<link rel="stylesheet" type="text/css" href="css/main.css">
 	<script type="text/javascript" src="js/vue-2.5.16.js"></script>
 	<script type="text/javascript" src="js/axios-0.18.0.min.js"></script>
-	<script type="text/javascript" src="js/hosts.js"></script>
+	<script type="text/javascript" src="js/host.js"></script>
 </head>
 <body>
 	<div class="register_con">
@@ -45,16 +45,11 @@
 						<input type="text" name="phone" v-model="mobile" @blur="check_phone"  id="phone">
 						<span v-show="error_phone" class="error_tip">{{ error_phone_message }}</span>
 					</li>
-<!--					<li>-->
-<!--						<label>图形验证码:</label>-->
-<!--						<input type="text" v-model="image_code" name="image_code" @blur="check_image_code"  id="pic_code">-->
-<!--						<img :src="" alt="图形验证码" class="pic_code">-->
-<!--						<span v-show="error_image_code" class="error_tip">请填写图形验证码</span>-->
-<!--					</li>-->
 					<li>
 						<label>短信验证码:</label>
 						<input type="text" v-model="sms_code" @blur="check_sms_code" name="msg_code" id="msg_code" class="msg_input">
-						<a @click="send_sms_code" class="get_msg_code">{{ sms_code_tip }}</a>
+						<a @click="send_sms_code" href="javascript:;" class="get_msg_code">{{ sms_code_tip }}</a>
+						<!--<span v-show="error_sms_code" class="error_tip">请填写短信验证码</span>-->
 						<span v-show="error_sms_code" class="error_tip">{{ error_sms_code_message }}</span>
 					</li>
 					<li class="agreement">
@@ -68,11 +63,8 @@
 				</ul>				
 				</form>
 			</div>
-
 		</div>
-
 	</div>
-
 	<div class="footer no-mp">
 		<div class="foot_link">
 			<a href="#">关于我们</a>

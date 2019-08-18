@@ -1,12 +1,12 @@
 from django.contrib.auth.backends import ModelBackend
-import  re
+import re
 from .models import User
 
 def jwt_response_payload_handler(token, user=None, request=None):
     """
     自定义jwt认证成功返回数据
     """
-    print("wt认证成功")
+    print("jwt认证成功")
     return {
         'token': token,
         'user_id': user.id,
