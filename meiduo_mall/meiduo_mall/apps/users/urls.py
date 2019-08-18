@@ -12,4 +12,6 @@ urlpatterns = [
     url(r'^mobiles/(?P<mobile>1[3-9]\d{9})/count/$', views.MobileCountView.as_view()),
     # 登陆, 获取JWT token
     url(r'^authorizations/$', obtain_jwt_token),
+    # 找回密码, 发送短信验证码的token
+    url(r'^accounts/(?P<account>\w{4,20}/sms/token/$)', views.SMSCodeTokenView.as_view()),
 ]
