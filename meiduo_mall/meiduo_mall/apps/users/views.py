@@ -3,6 +3,7 @@ from rest_framework.generics import CreateAPIView, GenericAPIView
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework import mixins
 import re
 
 from users import serializers
@@ -87,3 +88,13 @@ class PasswordTokenView(GenericAPIView):
         # 生成修改用户密码的access token
         access_token = user.generate_set_password_token()
         return Response({'user_id': user.id, 'access_token': access_token})
+
+class PasswordView(mixins.UpdateModelMixin, GenericAPIView):
+    """
+    找回密码，用户密码修改
+    """
+    queryset = User.objects.all()
+    serializer_class = serializers.RestPasswordSerializer
+
+    def post(self, request, pk):
+        return self.update(request, pk)
