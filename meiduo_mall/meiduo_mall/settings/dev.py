@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'corsheaders',     # CORS
     'users.apps.UsersConfig',
     'verifications.apps.VerificationsConfig',
+    'oauth.apps.OauthConfig',
 ]
 
 MIDDLEWARE = [
@@ -237,4 +238,7 @@ CORS_ORIGIN_WHITELIST = (
 
 CORS_ALLOW_CREDENTIALS = True  # 允许携带cookie
 
-
+# 用于QQ登录的配置文件
+QQ_APP_ID = ''
+QQ_APP_KEY = ''
+QQ_REDIRECT_URL = ''

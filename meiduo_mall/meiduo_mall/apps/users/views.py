@@ -26,7 +26,6 @@ class UsernameCountView(APIView):
         # 响应
         return Response(data)
 
-
 class MobileCountView(APIView):
     """判断手机号是否已存在"""
     def get(self, request, mobile):
@@ -43,7 +42,6 @@ class UserView(CreateAPIView):
     """注册"""
     # 指定序列化器类
     serializer_class = CreateUserSerializer
-
 
 class SMSCodeTokenView(GenericAPIView):
     """获取发送短信验证码的凭据"""
@@ -98,3 +96,5 @@ class PasswordView(mixins.UpdateModelMixin, GenericAPIView):
 
     def post(self, request, pk):
         return self.update(request, pk)
+
+#class UserDetailView():

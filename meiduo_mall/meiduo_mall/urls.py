@@ -26,4 +26,7 @@ urlpatterns = [
 
     # 用户登陆模块
     url(r'^', include('users.urls')),
+
+    # QQ登陆
+    url(r'oauth/', include('oauth.urls')),
 ]
