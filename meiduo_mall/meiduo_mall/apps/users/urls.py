@@ -18,4 +18,6 @@ urlpatterns = [
     url(r'^accounts/(?P<account>\w{4,20}/password/token/$)', views.PasswordTokenView.as_view()),
     # 找回密码， 设置密码
     url(r'^accounts/(?P<pk>/password/$)', views.PasswordView.as_view()),
+    # 用户个人中心数据
+    url(r'^user/$', views.UserDetailView.as_view())
 ]
