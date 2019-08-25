@@ -72,7 +72,8 @@
 									{{ email }}
 									<div v-if="email_active">已验证</div>
 									<div v-else>
-										待验证<input @click="set_email=true" type="button" name="" value="设 置"/>
+<!--										待验证<input @click="save_email" :disabled="send_email_btn_disabled"  type="button" name="" :value="send_email_tip"/>-->
+										待验证<input @click="set_email=true" type="button" name="" value="设 置">
 									</div>
 								</div>
 								<dic v-else>

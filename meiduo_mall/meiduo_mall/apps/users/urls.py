@@ -19,5 +19,9 @@ urlpatterns = [
     # 找回密码， 设置密码
     url(r'^accounts/(?P<pk>/password/$)', views.PasswordView.as_view()),
     # 用户个人中心数据
-    url(r'^user/$', views.UserDetailView.as_view())
+    url(r'^user/$', views.UserDetailView.as_view()),
+    # 发送邮件
+    url(r'^emails/$', views.EmailView.as_view()),
+    # 验证邮件
+    url(r'^emails/verification/$', views.EmailVerifyView.as_view()),
 ]
