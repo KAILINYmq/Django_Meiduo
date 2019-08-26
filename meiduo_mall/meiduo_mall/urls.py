@@ -29,4 +29,7 @@ urlpatterns = [
 
     # QQ登陆
     url(r'oauth/', include('oauth.urls')),
+
+    # 获取省市县三级
+    url(r'', include('areas.urls')),
 ]
