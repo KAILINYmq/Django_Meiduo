@@ -32,4 +32,7 @@ urlpatterns = [
 
     # 获取省市县三级
     url(r'', include('areas.urls')),
+
+    # 富文本编辑器
+    url(r'^ckeditor/', include('ckeditor_uploader.urls')),
 ]
