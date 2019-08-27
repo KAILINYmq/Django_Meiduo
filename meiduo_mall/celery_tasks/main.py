@@ -13,7 +13,7 @@ celery_app = Celery('meiduo')
 celery_app.config_from_object('celery_tasks.config')
 
 # 自动注册celery任务，系统会自动找到sms目录下的文件
-celery_app.autodiscover_tasks(['celery_tasks.sms', 'celery_tasks.emails'])
+celery_app.autodiscover_tasks(['celery_tasks.sms', 'celery_tasks.emails', 'celery_tasks.html'])
 
 # 开启celery命令
 # celery -A 应用路径(.包路经) worker -l info

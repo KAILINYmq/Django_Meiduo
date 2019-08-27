@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     'corsheaders',     # CORS
     'ckeditor',        # 富文本编辑器
     'ckeditor_uploader',    # 富文本编辑器上传image模块
-    'django-crontab',       # 添加定时任务
+    'django_crontab',       # 添加定时任务
     'users.apps.UsersConfig',
     'verifications.apps.VerificationsConfig',
     'oauth.apps.OauthConfig',
