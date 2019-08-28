@@ -121,6 +121,14 @@ CACHES = {
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }
+    },
+    # 用户浏览记录
+    "history": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/3",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
     }
 }
 
@@ -217,6 +225,9 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',  # session认证制
         'rest_framework.authentication.BasicAuthentication',  # 基础认证
     ),
+
+    # 分页
+    'DEFAULT_PAGINATION_CLASS': 'meiduo_mall.utils.paginations.StandardPageNumPagination',
 }
 # 设置JWT有效期
 JWT_AUTH = {

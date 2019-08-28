@@ -20,19 +20,16 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     #  图片验证码
     # url(r'^', include('verifications.urls')),
-
     # 发送短信验证码
     url(r'^', include('verifications.urls')),
-
     # 用户登陆模块
     url(r'^', include('users.urls')),
-
     # QQ登陆
     url(r'oauth/', include('oauth.urls')),
-
     # 获取省市县三级
     url(r'', include('areas.urls')),
-
     # 富文本编辑器
     url(r'^ckeditor/', include('ckeditor_uploader.urls')),
+    # 商品详情页热销商品显示
+    url(r'^', include('goods.urls')),
 ]

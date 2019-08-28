@@ -6,7 +6,9 @@ from . models import User
 from .utils import get_user_by_account
 
 from celery_tasks.emails.tasks import send_verify_email
-
+from .models import User, Address
+from . import constants
+from goods.models import SKU
 
 class CreateUserSerializer(serializers.ModelSerializer):
     """注册序列化器"""
@@ -196,9 +198,78 @@ class EmailSerializer(serializers.ModelSerializer):
 
         return instance
 
+class UserAddressSerializer(serializers.ModelSerializer):
+    """
+    用户地址序列化器
+    """
+    province = serializers.StringRelatedField(read_only=True)
+    city = serializers.StringRelatedField(read_only=True)
+    district = serializers.StringRelatedField(read_only=True)
+    province_id = serializers.IntegerField(label='省ID', required=True)
+    city_id = serializers.IntegerField(label='市ID', required=True)
+    district_id = serializers.IntegerField(label='区ID', required=True)
+    mobile = serializers.RegexField(label='手机号', regex=r'^1[3-9]\d{9}$')
+
+    class Meta:
+        model = Address
+        exclude = ('user', 'is_deleted', 'create_time', 'update_time')
+
+    def create(self, validated_data):
+        """
+        保存
+        """
+        # Address模型类中有user属性，将user对象添加到模型类的创建参数中
+        validated_data['user'] = self.context['request'].user
+        return super().create(validated_data)
 
 
+class AddressTitleSerializer(serializers.ModelSerializer):
+    """
+    地址标题
+    """
+    class Meta:
+        model = Address
+        fields = ('title',)
 
+
+class AddUserHistorySerializer(serializers.Serializer):
+    """用户浏览记录序列化器"""
+    sku_id = serializers.IntegerField(min_value=1)
+
+    def validate_sku_id(self, value):
+        try:
+            SKU.objects.get(id=value)
+        except SKU.DoesNotExist:
+            raise serializers.ValidationError("sku id 不存在")
+        return value
+
+    def create(self, validated_data):
+        """保存"""
+        # user_id
+        user_id = self.context['request'].user.id
+        sku_id = validated_data['sku_id']
+
+        # 保存记录到redis中
+        redis_conn = get_redis_connection('history')
+
+        # 创建redis管道
+        pl = redis_conn.pipeline()
+
+        # 清除sku_id在redis中的记录，防止存储的数据是[1,1,1,1,1]
+        # lrem(name, count, value)
+        pl.lrem('history_%s' % user_id, 0, sku_id)
+
+        # 向redis追加数据
+        # lpush  [1,2,3,4] 5   -> [5,1,2,3,4]
+        pl.lpush('history_%s' % user_id, sku_id)
+
+        # 如果超过数量，截断
+        # ltrim(name, start, end)
+        pl.ltrim('history_%s' % user_id, 0, constants.USER_BROWSING_HISTORY_COUNTS_LIMIT-1)
+
+        pl.execute()
+
+        return validated_data
 
 
 
