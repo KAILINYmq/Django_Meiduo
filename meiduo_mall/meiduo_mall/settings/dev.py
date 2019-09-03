@@ -32,7 +32,7 @@ DEBUG = True
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
 # Application definition
-
+# 需要操作模板和数据库的app需要添加，习惯上app都要添加
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -52,6 +52,8 @@ INSTALLED_APPS = [
     'areas.apps.AreasConfig',
     'goods.apps.GoodsConfig',
     'contents.apps.ContentsConfig',
+    'carts.apps.CartsConfig',
+    'orders.apps.OrdersConfig',
 ]
 
 MIDDLEWARE = [
@@ -127,6 +129,14 @@ CACHES = {
     "history": {
         "BACKEND": "django_redis.cache.RedisCache",
         "LOCATION": "redis://127.0.0.1:6379/3",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    },
+    # 购物车
+    "cart": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/4",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }
@@ -305,7 +315,7 @@ CRONJOBS = {
 }
 
 #  解决crontab中文问题
-CRONTAB_COMMAND_PREFIX = 'LANG=zh_cn.UTF-8'
+CRONTAB_COMMAND_PREFIX = 'LANG_ALL=zh_cn.UTF-8'
 
 # Haystack
 HAYSTACK_CONNECTIONS = {

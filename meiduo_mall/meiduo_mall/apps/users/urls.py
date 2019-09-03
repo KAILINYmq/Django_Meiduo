@@ -12,7 +12,8 @@ urlpatterns = [
     # 判断手机号是否存在
     url(r'^mobiles/(?P<mobile>1[3-9]\d{9})/count/$', views.MobileCountView.as_view()),
     # 登陆, 获取JWT token
-    url(r'^authorizations/$', obtain_jwt_token),
+    # url(r'^authorizations/$', obtain_jwt_token),
+    url(r'^authorizations/$', views.UserAuthorizationView.as_view()),
     # 找回密码, 发送短信验证码的token
     url(r'^accounts/(?P<account>\w{4,20}/sms/token/$)', views.SMSCodeTokenView.as_view()),
     # 找回密码, 获取修改密码的token

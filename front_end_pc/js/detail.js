@@ -88,6 +88,7 @@ var vm = new Vue({
                         'Authorization': 'JWT ' + this.token
                     },
                     responseType: 'json',
+                    // 允许携带cookie
                     withCredentials: true
                 })
                 .then(response => {

@@ -4,6 +4,7 @@ from rest_framework.generics import CreateAPIView, GenericAPIView, RetrieveAPIVi
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework_jwt.views import ObtainJSONWebToken
 from rest_framework import mixins
 import re
 from rest_framework.permissions import IsAuthenticated
@@ -16,6 +17,7 @@ from verifications.serializers import CheckImageCodeSerialzier
 from .utils import get_user_by_account
 from goods.models import SKU
 from goods.serializers import SKUSerializer
+from carts.utils import merge_cart_cookie_to_redis
 
 # Create your views here.
 class UsernameCountView(APIView):
@@ -174,7 +176,21 @@ class UserHistoryView(mixins.CreateModelMixin, GenericAPIView):
         serializer = SKUSerializer(sku_list, many=True)
         return Response(serializer.data)
 
+class UserAuthorizationView(ObtainJSONWebToken):
+    """用户登录合并购物车"""
+    def post(self, request):
+        # 调用jwt父类的扩展方法，对用户登录的数据进行验证
+        response = super().post(request)
 
+        # 如果用户登录成功，进行购物车数据合并
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            # 表示用户登陆成功
+            user = serializer.validated_data.get("user")
+            # 调用合并购物车方法
+            response = merge_cart_cookie_to_redis(request, response, user)
+
+        return response
 
 
 
