@@ -27,10 +27,12 @@ urlpatterns = [
     # 验证邮件
     url(r'^emails/verification/$', views.EmailVerifyView.as_view()),
     # 用户浏览记录
-    url(r'browse_histories/$', views.UserHistoryView.as_view())
+    url(r'browse_histories/$', views.UserHistoryView.as_view()),
+    # 收货地址
+    # url(r'addresses/$', views.AddressViewSet.as_view())
 ]
 
-# router = DefaultRouter()
-# router.register('addresses', views.AddressViewSet, base_name='addresses')
-#
-# urlpatterns += router.urls
+router = DefaultRouter()
+router.register('addresses', views.AddressViewSet, base_name='addresses')
+
+urlpatterns += router.urls

@@ -227,6 +227,7 @@ class AddressTitleSerializer(serializers.ModelSerializer):
     """
     地址标题
     """
+
     class Meta:
         model = Address
         fields = ('title',)
